@@ -30,25 +30,35 @@ public class ProductoController {
 	@GetMapping("/obtener")
 	public ResponseEntity<?> retornarproducto(){
 		List<Producto> productos=ProductoService.retornarTodo();
-		return new ResponseEntity<List<Producto>>(productos,HttpStatus.OK);			
-		
+		return new ResponseEntity<List<Producto>>(productos,HttpStatus.OK);		
 	}
+	
+	@GetMapping("/activo")
+	public ResponseEntity<?> retornarActivo(){
+		List<Producto> productosActivos=ProductoService.retornarActivo();
+		return new ResponseEntity<List<Producto>>(productosActivos,HttpStatus.OK);		
+	}
+	@GetMapping("/inactivo")
+	public ResponseEntity<?> retornarInactivo(){
+		List<Producto> productosInactivos=ProductoService.retornarInactivo();
+		return new ResponseEntity<List<Producto>>(productosInactivos,HttpStatus.OK);		
+	}
+	
 	@GetMapping("/obtener/{id}")
 	public ResponseEntity<?> obtenerid(@PathVariable int id )throws NoencontradoException{
-		Optional<Producto> producto=ProductoService.retornarPorId(id);
-		return new ResponseEntity<Producto>(producto.get(),HttpStatus.OK);				
-		
+		Producto producto=ProductoService.retornarPorId(id);
+		return new ResponseEntity<Producto>(producto,HttpStatus.OK);		
 	}
 	
 	@PostMapping("/Guardar")
 	public ResponseEntity<?> guardarproducto(@RequestBody Producto producto) throws GuardarException {
 		ProductoService.guardar(producto);
-		return new ResponseEntity<Object>("",HttpStatus.CREATED);
-		
+		return new ResponseEntity<Object>("",HttpStatus.CREATED);	
 	}
+	
 	@PutMapping("/estado/{id}")
 	public void ocultarproducto(@PathVariable int id) throws NoencontradoException {
-		ProductoService.ocultar(id);
+		ProductoService.cambiarEstado(id);
 		
 		
 	}

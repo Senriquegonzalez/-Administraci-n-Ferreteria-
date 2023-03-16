@@ -40,9 +40,9 @@ public class ProductoServiceImp implements IProductoService{
 	
 	
 	@Override
-	public Optional<Producto> retornarPorId(int id) throws NoencontradoException {	
+	public Producto retornarPorId(int id) throws NoencontradoException {	
 		if(productorepo.existsById(id)==true) {
-			return productorepo.findById(id);
+			return productorepo.findById(id).get();
 		}
 		else {
 			 throw new NoencontradoException("No se encuentra ningun producto con el id "+ id);
@@ -57,7 +57,7 @@ public class ProductoServiceImp implements IProductoService{
 	}
 
 	@Override
-	public Optional<Producto> modificar(Producto producto) {
+	public Producto modificar(Producto producto) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -74,10 +74,9 @@ public class ProductoServiceImp implements IProductoService{
 	}
 
 	@Override
-	public void ocultar(int id)throws NoencontradoException {
+	public void cambiarEstado(int id)throws NoencontradoException {
 		if(productorepo.existsById(id)==true) {
-			Optional<Producto> productooptional=productorepo.findById(id);
-			Producto producto =productooptional.get();
+			Producto producto=productorepo.findById(id).get();			
 			if(producto.getActivo()==true) {
 				producto.setActivo(false);
 			this.productorepo.save(producto);
@@ -85,14 +84,27 @@ public class ProductoServiceImp implements IProductoService{
 			else {
 				producto.setActivo(true);
 				this.productorepo.save(producto);
-			}
-				
+			}			
 			 
 		}
 		else {
 			 throw new NoencontradoException("No se encuentra ningun producto con el id "+ id);
 		}
 		
+	}
+
+
+	@Override
+	public List<Producto> retornarActivo() {
+		List<Producto> productoActivo = (List<Producto>) productorepo.productoActivo();
+				return productoActivo;
+	}
+
+
+	@Override
+	public List<Producto> retornarInactivo() {		
+		List<Producto> productoActivo = (List<Producto>) productorepo.productoInactivo();
+		return productoActivo;
 	}
 	
 	
